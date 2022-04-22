@@ -6,6 +6,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { SocketIoAdapter } from './socket-io.adapter';
+import { Response, Request, NextFunction } from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -17,6 +18,7 @@ async function bootstrap() {
       crossOriginResourcePolicy: {
         policy: 'cross-origin',
       },
+      hidePoweredBy: true,
     }),
   );
   app.use(cookieParser());
@@ -27,7 +29,23 @@ async function bootstrap() {
       saveUninitialized: false,
     }),
   );
-  app.enableCors();
+  app.enableCors({
+    credentials: true,
+    origin: config.get<string>('CREDENTIALS_ORIGIN'),
+  });
+  app.use((req: Request, res: Response, next: NextFunction) => {
+    res.header(
+      'Access-Control-Allow-Origin',
+      config.get<string>('CREDENTIALS_ORIGIN'),
+    );
+    res.header(
+      'Access-Control-Allow-Headers',
+      'Origin, X-Requested-With, Content-Type, Accept',
+    );
+    res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, HEAD, DELETE');
+    next();
+  });
   //app.use(csurf());
   await app.listen(PORT, () => {
     console.log(`App was started on port ${PORT}`);

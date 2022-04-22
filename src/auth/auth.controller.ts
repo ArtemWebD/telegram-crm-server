@@ -4,6 +4,7 @@ import {
   Post,
   UseGuards,
   Response,
+  Request,
   Get,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -31,25 +32,32 @@ export class AuthController {
   @UseGuards(AuthGuard('login'))
   @Post('login')
   async login(
-    @Body() tokenBody: TokenBody,
     @Response() res: express.Response,
+    @Request() req: express.Request,
   ): Promise<void> {
-    const token = await this.authService.login(tokenBody);
+    const user = req.user as TokenBody;
+    const token = await this.authService.login(user);
     res
       .status(200)
       .cookie('token', token, {
         httpOnly: true,
         domain: this.configService.get<string>('COOKIE_DOMAIN'),
         expires: new Date(Date.now() + 1000 * 60 * 60 * 36),
-        secure: true,
-        sameSite: false,
+        secure: this.configService.get<boolean>('COOKIE_SECURE'),
       })
       .send();
   }
 
   @UseGuards(JwtGuard)
   @Get()
-  auth() {
+  auth(): void {
     return;
+  }
+
+  @UseGuards(JwtGuard)
+  @Post('logout')
+  logout(@Response() res: express.Response): void {
+    res.clearCookie('token');
+    res.send();
   }
 }

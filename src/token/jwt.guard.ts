@@ -24,8 +24,7 @@ export class JwtGuard extends AuthGuard('jwt') {
       httpOnly: true,
       domain: this.configService.get<string>('COOKIE_DOMAIN'),
       expires: new Date(Date.now() + 1000 * 60 * 60 * 36),
-      secure: true,
-      sameSite: false,
+      secure: this.configService.get<boolean>('COOKIE_SECURE'),
     });
     return token;
   }

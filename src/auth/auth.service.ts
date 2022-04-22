@@ -37,6 +37,7 @@ export class AuthService {
   }
 
   async login(tokenBody: TokenBody): Promise<string> {
+    console.log(tokenBody);
     return this.tokenService.createTokens(tokenBody.userId);
   }
 }

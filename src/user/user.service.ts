@@ -1,8 +1,9 @@
 import * as bcrypt from 'bcryptjs';
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';
 import { UserEntity } from './entities/user.entity';
+import { EditDataDto } from './dto/edit-data.dto';
 
 @Injectable()
 export class UserService {
@@ -24,26 +25,33 @@ export class UserService {
     return this.userRepository.save({ login, password });
   }
 
-  checkPassword(
+  async checkPassword(
     enteredPassword: string,
-    rightPassword: string,
+    rightPassword?: string | null,
+    id?: number,
   ): Promise<boolean> {
+    if (!rightPassword) {
+      const { password } = await this.userRepository.findOne(id);
+      rightPassword = password;
+    }
     return bcrypt.compare(enteredPassword, rightPassword);
   }
 
-  async update(
-    id: number,
-    name?: string,
-    password?: string,
-  ): Promise<UpdateResult> {
-    if (password) {
-      password = await bcrypt.hash(password, 12);
+  async update(editDataDto: EditDataDto): Promise<UpdateResult> {
+    const { userId, login, oldPassword } = editDataDto;
+    let newPassword = editDataDto.newPassword;
+    const isCompare = await this.checkPassword(oldPassword, null, userId);
+    if (!isCompare) {
+      throw new HttpException('Пароли не совпадают', HttpStatus.FORBIDDEN);
+    }
+    if (newPassword) {
+      newPassword = await bcrypt.hash(newPassword, 12);
     }
     return this.userRepository.update(
-      { id },
+      { id: userId },
       {
-        ...(name && { name }),
-        ...(password && { password }),
+        ...(login && { login }),
+        ...(newPassword && { password: newPassword }),
       },
     );
   }
