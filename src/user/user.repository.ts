@@ -1,5 +1,5 @@
 import * as bcrypt from 'bcryptjs';
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserEntity } from './entities/user.entity';
@@ -27,7 +27,7 @@ export class UserRepository {
   async getByLogin(login: string): Promise<UserEntity> {
     const user = await this.repository.findOneBy({ login });
     if (!user) {
-      throw new Error('User was not found');
+      throw new HttpException('User was not found', HttpStatus.BAD_REQUEST);
     }
     return user;
   }
