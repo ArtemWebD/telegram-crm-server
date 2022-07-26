@@ -23,4 +23,12 @@ export class UserRepository {
       password: hashed,
     });
   }
+
+  async getByLogin(login: string): Promise<UserEntity> {
+    const user = await this.repository.findOneBy({ login });
+    if (!user) {
+      throw new Error('User was not found');
+    }
+    return user;
+  }
 }
