@@ -17,7 +17,7 @@ import { TokenModule } from './token/token.module';
         username: configService.get<string>('DATABASE_USERNAME'),
         password: configService.get<string>('DATABASE_PASSWORD'),
         database: configService.get<string>('DATABASE_NAME'),
-        entities: ['./../entities/*.{js,ts}'],
+        entities: [__dirname + '/**/entities/*.entity{.ts,.js}'],
         synchronize: true,
       }),
     }),
