@@ -26,7 +26,7 @@ export class AuthController {
       maxAge: 30 * 60 * 1000,
       httpOnly: true,
     });
-    res.status(200);
+    res.status(200).send();
   }
 
   @UseGuards(AuthGuard('login'))
@@ -42,13 +42,16 @@ export class AuthController {
       maxAge: 30 * 60 * 1000,
       httpOnly: true,
     });
-    res.status(200);
+    res.status(200).send();
   }
 
   @Get('logout')
-  async logout(@Req() req: Request): Promise<void> {
+  async logout(@Req() req: Request, @Res() res: Response): Promise<void> {
     const { refreshToken } = req.cookies;
     await this.authService.logout(refreshToken);
+    res.clearCookie('refreshToken');
+    res.clearCookie('accessToken');
+    res.status(200).send();
   }
 
   @Post('refresh')
