@@ -32,9 +32,12 @@ export class AuthService {
 
   async register(userFields: IUser): Promise<ITokens> {
     const user = await this.userService.create(userFields);
+    return this.login(user);
+  }
+
+  async login(user: UserEntity): Promise<ITokens> {
     const userDto = new UserDto(user); // id, login
     const tokens = this.tokenService.generateTokens({ ...userDto });
-    console.log(tokens);
     await this.tokenRepository.save(user, tokens.refreshToken);
     return tokens;
   }
