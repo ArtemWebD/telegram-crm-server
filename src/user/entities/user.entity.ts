@@ -18,7 +18,8 @@ export class UserEntity {
   @Column()
   password: string;
 
-  @OneToOne(() => TokenEntity, (token) => token.user)
-  @JoinColumn()
+  @OneToOne(() => TokenEntity, (token) => token.user, {
+    cascade: true,
+  })
   token: TokenEntity;
 }
