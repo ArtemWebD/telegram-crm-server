@@ -30,4 +30,8 @@ export class TokenRepository {
   remove(refreshToken: string): Promise<DeleteResult> {
     return this.repository.delete({ refreshToken });
   }
+
+  findRefresh(refreshToken: string) {
+    return this.repository.findOneBy({ refreshToken });
+  }
 }
