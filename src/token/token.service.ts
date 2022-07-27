@@ -29,7 +29,7 @@ export class TokenService {
     };
   }
 
-  validateAccessToken(token): any | null {
+  validateAccessToken(token: string): any | null {
     try {
       return this.jwtService.verify(token, {
         secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
@@ -39,7 +39,7 @@ export class TokenService {
     }
   }
 
-  validateRefreshToken(token) {
+  validateRefreshToken(token: string): any | null {
     try {
       return this.jwtService.verify(token, {
         secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
