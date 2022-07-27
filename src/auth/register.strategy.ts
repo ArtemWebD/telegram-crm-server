@@ -15,7 +15,7 @@ export class RegisterStrategy extends PassportStrategy(Strategy, 'register') {
   }
 
   async validate(login: string, password: string): Promise<IUser> {
-    const isExist = this.authService.validateIsExisted(login);
+    const isExist = await this.authService.validateIsExisted(login);
     if (isExist) {
       throw new UnauthorizedException('Такой пользователь уже существует');
     }
