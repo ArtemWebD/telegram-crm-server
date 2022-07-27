@@ -31,4 +31,8 @@ export class UserRepository {
     }
     return user;
   }
+
+  getById(id: number): Promise<UserEntity> {
+    return this.repository.findOneBy({ id });
+  }
 }
