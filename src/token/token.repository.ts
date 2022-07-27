@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from 'src/user/entities/user.entity';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import { TokenEntity } from './entities/token.entity';
 
 @Injectable()
@@ -25,5 +25,9 @@ export class TokenRepository {
       refreshToken,
       user,
     });
+  }
+
+  remove(refreshToken: string): Promise<DeleteResult> {
+    return this.repository.delete(refreshToken);
   }
 }
