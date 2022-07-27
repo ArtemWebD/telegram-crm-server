@@ -34,7 +34,8 @@ export class AuthService {
     const user = await this.userService.create(userFields);
     const userDto = new UserDto(user); // id, login
     const tokens = this.tokenService.generateTokens({ ...userDto });
-    await this.tokenRepository.save(user.id, tokens.refreshToken);
+    console.log(tokens);
+    await this.tokenRepository.save(user, tokens.refreshToken);
     return tokens;
   }
 }
