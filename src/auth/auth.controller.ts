@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { Controller, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
 import { UserEntity } from 'src/user/entities/user.entity';
@@ -45,7 +45,7 @@ export class AuthController {
     res.status(200).send();
   }
 
-  @Get('logout')
+  @Post('logout')
   async logout(@Req() req: Request, @Res() res: Response): Promise<void> {
     const { refreshToken } = req.cookies;
     await this.authService.logout(refreshToken);
@@ -55,5 +55,17 @@ export class AuthController {
   }
 
   @Post('refresh')
-  refresh(@Req() req: Request) {}
+  async refresh(@Req() req: Request, @Res() res: Response): Promise<void> {
+    const { refreshToken } = req.cookies;
+    const tokens = await this.authService.refresh(refreshToken);
+    res.cookie('accessToken', tokens.accessToken, {
+      maxAge: 30 * 60 * 1000,
+      httpOnly: true,
+    });
+    res.cookie('refreshToken', tokens.refreshToken, {
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+      httpOnly: true,
+    });
+    res.status(200).send();
+  }
 }
