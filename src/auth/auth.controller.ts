@@ -26,7 +26,7 @@ export class AuthController {
       maxAge: 30 * 60 * 1000,
       httpOnly: true,
     });
-    res.send();
+    res.status(200);
   }
 
   @UseGuards(AuthGuard('login'))
@@ -42,12 +42,15 @@ export class AuthController {
       maxAge: 30 * 60 * 1000,
       httpOnly: true,
     });
-    res.send();
+    res.status(200);
   }
 
   @Get('logout')
-  logout() {}
+  async logout(@Req() req: Request): Promise<void> {
+    const { refreshToken } = req.cookies;
+    await this.authService.logout(refreshToken);
+  }
 
   @Post('refresh')
-  refresh() {}
+  refresh(@Req() req: Request) {}
 }
