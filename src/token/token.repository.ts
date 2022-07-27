@@ -28,6 +28,6 @@ export class TokenRepository {
   }
 
   remove(refreshToken: string): Promise<DeleteResult> {
-    return this.repository.delete(refreshToken);
+    return this.repository.delete({ refreshToken });
   }
 }
