@@ -7,6 +7,7 @@ import { UserService } from 'src/user/user.service';
 import { ITokens, TokenService } from 'src/token/token.service';
 import { UserDto } from './dto/user.dto';
 import { TokenRepository } from 'src/token/token.repository';
+import { DeleteResult } from 'typeorm';
 
 @Injectable()
 export class AuthService {
@@ -40,5 +41,9 @@ export class AuthService {
     const tokens = this.tokenService.generateTokens({ ...userDto });
     await this.tokenRepository.save(user, tokens.refreshToken);
     return tokens;
+  }
+
+  async logout(refreshToken: string): Promise<DeleteResult> {
+    return this.tokenRepository.remove(refreshToken);
   }
 }
