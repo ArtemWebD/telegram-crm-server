@@ -1,5 +1,10 @@
 import * as bcrypt from 'bcryptjs';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UserRepository } from 'src/user/user.repository';
 import { UserEntity } from 'src/user/entities/user.entity';
 import { IUser } from './register.strategy';
@@ -45,5 +50,18 @@ export class AuthService {
 
   async logout(refreshToken: string): Promise<DeleteResult> {
     return this.tokenRepository.remove(refreshToken);
+  }
+
+  async refresh(refreshToken: string) {
+    if (!refreshToken) {
+      throw new UnauthorizedException();
+    }
+    const userData = this.tokenService.validateRefreshToken(refreshToken);
+    const token = await this.tokenRepository.findRefresh(refreshToken);
+    if (!userData || !token) {
+      throw new UnauthorizedException();
+    }
+    const user = await this.userRepository.getById(userData.id);
+    return this.login(user);
   }
 }
