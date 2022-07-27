@@ -1,8 +1,10 @@
+import { ChatEntity } from 'src/chat/entities/chat.entity';
 import { TokenEntity } from 'src/token/entities/token.entity';
 import {
   Column,
   Entity,
   JoinColumn,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -22,4 +24,9 @@ export class UserEntity {
     cascade: true,
   })
   token: TokenEntity;
+
+  @OneToMany(() => ChatEntity, (chat) => chat.user, {
+    cascade: true,
+  })
+  chats: ChatEntity[];
 }
