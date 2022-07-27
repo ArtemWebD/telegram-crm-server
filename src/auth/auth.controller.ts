@@ -2,6 +2,7 @@ import { Controller, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
 import { UserEntity } from 'src/user/entities/user.entity';
+import { AuthorizationGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 import { IUser } from './register.strategy';
 
