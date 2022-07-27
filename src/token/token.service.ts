@@ -28,4 +28,24 @@ export class TokenService {
       refreshToken,
     };
   }
+
+  validateAccessToken(token): any | null {
+    try {
+      return this.jwtService.verify(token, {
+        secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
+      });
+    } catch (error) {
+      return null;
+    }
+  }
+
+  validateRefreshToken(token) {
+    try {
+      return this.jwtService.verify(token, {
+        secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
+      });
+    } catch (error) {
+      return null;
+    }
+  }
 }
