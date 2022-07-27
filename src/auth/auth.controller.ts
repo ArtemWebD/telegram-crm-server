@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
+import { UserEntity } from 'src/user/entities/user.entity';
 import { AuthService } from './auth.service';
 import { IUser } from './register.strategy';
 
@@ -21,12 +22,28 @@ export class AuthController {
       maxAge: 30 * 24 * 60 * 60 * 1000,
       httpOnly: true,
     });
-    res.json({ accessToken: tokens.accessToken });
+    res.cookie('accessToken', tokens.accessToken, {
+      maxAge: 30 * 60 * 1000,
+      httpOnly: true,
+    });
+    res.send();
   }
 
   @UseGuards(AuthGuard('login'))
   @Post('login')
-  async login() {}
+  async login(@Req() req: Request, @Res() res: Response) {
+    const user = req.user as UserEntity;
+    const tokens = await this.authService.login(user);
+    res.cookie('refreshToken', tokens.refreshToken, {
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+      httpOnly: true,
+    });
+    res.cookie('accessToken', tokens.accessToken, {
+      maxAge: 30 * 60 * 1000,
+      httpOnly: true,
+    });
+    res.send();
+  }
 
   @Get('logout')
   logout() {}
