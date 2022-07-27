@@ -2,10 +2,20 @@ import * as bcrypt from 'bcryptjs';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UserRepository } from 'src/user/user.repository';
 import { UserEntity } from 'src/user/entities/user.entity';
+import { IUser } from './register.strategy';
+import { UserService } from 'src/user/user.service';
+import { ITokens, TokenService } from 'src/token/token.service';
+import { UserDto } from './dto/user.dto';
+import { TokenRepository } from 'src/token/token.repository';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly userService: UserService,
+    private readonly tokenService: TokenService,
+    private readonly tokenRepository: TokenRepository,
+  ) {}
 
   validateIsExisted(login: string): Promise<boolean> {
     return this.userRepository.isExist(login);
@@ -18,5 +28,13 @@ export class AuthService {
       throw new HttpException('User was not found', HttpStatus.BAD_REQUEST);
     }
     return user;
+  }
+
+  async register(userFields: IUser): Promise<ITokens> {
+    const user = await this.userService.create(userFields);
+    const userDto = new UserDto(user); // id, login
+    const tokens = this.tokenService.generateTokens({ ...userDto });
+    await this.tokenRepository.save(user.id, tokens.refreshToken);
+    return tokens;
   }
 }
