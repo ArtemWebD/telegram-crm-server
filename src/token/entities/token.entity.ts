@@ -1,5 +1,11 @@
 import { UserEntity } from 'src/user/entities/user.entity';
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity('token')
 export class TokenEntity {
@@ -7,6 +13,7 @@ export class TokenEntity {
   id: number;
 
   @OneToOne(() => UserEntity, (user) => user.token)
+  @JoinColumn()
   user: UserEntity;
 
   @Column()
