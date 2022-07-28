@@ -7,9 +7,9 @@ import { TokenModule } from './token/token.module';
 import { ChatModule } from './chat/chat.module';
 import { FileModule } from './file/file.module';
 import { MessageModule } from './message/message.module';
-import { MessageGateway } from './message.gateway';
 import { AppGateway } from './app.gateway';
 import { BotModule } from './bot/bot.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -27,6 +27,7 @@ import { BotModule } from './bot/bot.module';
         synchronize: true,
       }),
     }),
+    EventEmitterModule.forRoot(),
     AuthModule,
     UserModule,
     TokenModule,
@@ -36,6 +37,6 @@ import { BotModule } from './bot/bot.module';
     BotModule,
   ],
   controllers: [],
-  providers: [MessageGateway, AppGateway],
+  providers: [AppGateway],
 })
 export class AppModule {}
