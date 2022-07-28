@@ -35,12 +35,11 @@ export class ChatRepository {
     return this.repository.findOneBy({ chatId });
   }
 
-  getByUser(userId: number, take: number, page: number): Promise<ChatEntity[]> {
+  getByUser(botId: number, take: number, page: number): Promise<ChatEntity[]> {
     return this.repository.find({
-      where: { user: { id: userId } },
+      where: { bot: { id: botId } },
       take,
       skip: take * page,
-      select: ['chatId', 'first_name', 'id', 'last_name', 'photo', 'username'],
     });
   }
 
