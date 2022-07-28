@@ -47,4 +47,8 @@ export class BotRepository {
   ): Promise<UpdateResult> {
     return this.repository.update(id, partialEntity);
   }
+
+  getById(id: number): Promise<BotEntity> {
+    return this.repository.findOneBy({ id });
+  }
 }
