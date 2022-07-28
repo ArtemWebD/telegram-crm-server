@@ -1,10 +1,12 @@
 import { FileEntity } from 'src/file/entities/file.entity';
+import { MessageEntity } from 'src/message/entities/message.entity';
 import { UserEntity } from 'src/user/entities/user.entity';
 import {
   Column,
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -36,4 +38,7 @@ export class ChatEntity {
   })
   @JoinColumn()
   photo?: FileEntity;
+
+  @OneToMany(() => MessageEntity, (message) => message.chat)
+  messages: MessageEntity[];
 }

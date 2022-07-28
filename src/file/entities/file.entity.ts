@@ -1,5 +1,13 @@
 import { ChatEntity } from 'src/chat/entities/chat.entity';
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { MessageEntity } from 'src/message/entities/message.entity';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity('file')
 export class FileEntity {
@@ -19,4 +27,10 @@ export class FileEntity {
     nullable: true,
   })
   chat: ChatEntity;
+
+  @ManyToOne(() => MessageEntity, (message) => message.files, {
+    nullable: true,
+  })
+  @JoinColumn()
+  message?: MessageEntity;
 }
