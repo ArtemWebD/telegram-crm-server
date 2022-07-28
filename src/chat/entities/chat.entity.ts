@@ -1,6 +1,6 @@
+import { BotEntity } from 'src/bot/entities/bot.entity';
 import { FileEntity } from 'src/file/entities/file.entity';
 import { MessageEntity } from 'src/message/entities/message.entity';
-import { UserEntity } from 'src/user/entities/user.entity';
 import {
   Column,
   Entity,
@@ -28,9 +28,9 @@ export class ChatEntity {
   @Column({ nullable: true })
   username?: string;
 
-  @ManyToOne(() => UserEntity, (user) => user.chats)
+  @ManyToOne(() => BotEntity, (bot) => bot.chats)
   @JoinColumn()
-  user: UserEntity;
+  bot: BotEntity;
 
   @OneToOne(() => FileEntity, (file) => file.chat, {
     cascade: true,

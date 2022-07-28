@@ -1,4 +1,4 @@
-import { ChatEntity } from 'src/chat/entities/chat.entity';
+import { BotEntity } from 'src/bot/entities/bot.entity';
 import { TokenEntity } from 'src/token/entities/token.entity';
 import {
   Column,
@@ -25,8 +25,8 @@ export class UserEntity {
   })
   token: TokenEntity;
 
-  @OneToMany(() => ChatEntity, (chat) => chat.user, {
+  @OneToMany(() => BotEntity, (bot) => bot.user, {
     cascade: true,
   })
-  chats: ChatEntity[];
+  bots: BotEntity[];
 }
