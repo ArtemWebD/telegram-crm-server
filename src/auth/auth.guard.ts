@@ -7,6 +7,11 @@ import {
 import { Observable } from 'rxjs';
 import { TokenService } from 'src/token/token.service';
 
+export interface IUserData {
+  id: number;
+  login: string;
+}
+
 @Injectable()
 export class AuthorizationGuard implements CanActivate {
   constructor(private readonly tokenService: TokenService) {}
