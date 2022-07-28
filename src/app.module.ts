@@ -6,6 +6,9 @@ import { UserModule } from './user/user.module';
 import { TokenModule } from './token/token.module';
 import { ChatModule } from './chat/chat.module';
 import { FileModule } from './file/file.module';
+import { MessageModule } from './message/message.module';
+import { MessageGateway } from './message.gateway';
+import { AppGateway } from './app.gateway';
 
 @Module({
   imports: [
@@ -28,8 +31,9 @@ import { FileModule } from './file/file.module';
     TokenModule,
     ChatModule,
     FileModule,
+    MessageModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [MessageGateway, AppGateway],
 })
 export class AppModule {}
