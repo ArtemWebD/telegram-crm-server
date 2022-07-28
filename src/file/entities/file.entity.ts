@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { ChatEntity } from 'src/chat/entities/chat.entity';
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('file')
 export class FileEntity {
@@ -13,4 +14,9 @@ export class FileEntity {
 
   @Column({ array: true, type: 'int' })
   data: number[];
+
+  @OneToOne(() => ChatEntity, (chat) => chat.photo, {
+    nullable: true,
+  })
+  chat: ChatEntity;
 }
