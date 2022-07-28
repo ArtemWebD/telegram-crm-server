@@ -9,6 +9,7 @@ import { FileModule } from './file/file.module';
 import { MessageModule } from './message/message.module';
 import { MessageGateway } from './message.gateway';
 import { AppGateway } from './app.gateway';
+import { BotModule } from './bot/bot.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { AppGateway } from './app.gateway';
     ChatModule,
     FileModule,
     MessageModule,
+    BotModule,
   ],
   controllers: [],
   providers: [MessageGateway, AppGateway],
