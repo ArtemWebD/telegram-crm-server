@@ -25,6 +25,8 @@ export class BotEntity {
   @ManyToOne(() => UserEntity, (user) => user.bots)
   user: UserEntity;
 
-  @OneToMany(() => ChatEntity, (chat) => chat.bot)
+  @OneToMany(() => ChatEntity, (chat) => chat.bot, {
+    cascade: true,
+  })
   chats: ChatEntity[];
 }
