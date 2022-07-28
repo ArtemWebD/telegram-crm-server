@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
   Post,
   Put,
   Query,
@@ -17,7 +18,6 @@ import { CreateBotDto } from './dto/create-bot.dto';
 import { UpdateBotDto } from './dto/update-bot.dto';
 import { BotEntity } from './entities/bot.entity';
 
-@UseGuards(AuthorizationGuard)
 @Controller('bot')
 export class BotController {
   constructor(
@@ -25,6 +25,7 @@ export class BotController {
     private readonly botService: BotService,
   ) {}
 
+  @UseGuards(AuthorizationGuard)
   @Post()
   create(
     @Req() req: Request,
@@ -34,6 +35,7 @@ export class BotController {
     return this.botService.create(createBotDto, user.id);
   }
 
+  @UseGuards(AuthorizationGuard)
   @Get()
   getAll(
     @Req() req: Request,
@@ -44,16 +46,23 @@ export class BotController {
     return this.botRepository.getAllByUserId(user.id, +take, +page);
   }
 
+  @UseGuards(AuthorizationGuard)
   @Put('/:id')
   async update(
     @Body() updateBotDto: UpdateBotDto,
-    @Query('id') id: string,
+    @Param('id') id: string,
   ): Promise<void> {
     await this.botRepository.update(+id, updateBotDto);
   }
 
+  @UseGuards(AuthorizationGuard)
   @Delete('/:id')
-  async remove(@Query('id') id: string): Promise<void> {
-    await this.botRepository.remove(+id);
+  async remove(@Param('id') id: string): Promise<void> {
+    await this.botService.remove(+id);
+  }
+
+  @Post('/:token')
+  botHandler(@Body() body) {
+    console.log(body);
   }
 }
