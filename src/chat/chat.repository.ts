@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { FileDto } from 'src/file/dto/file.dto';
 import { FileRepository } from 'src/file/file.repository';
 import { UserEntity } from 'src/user/entities/user.entity';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import { ChatEntity } from './entities/chat.entity';
 
 @Injectable()
@@ -33,5 +33,18 @@ export class ChatRepository {
 
   getByChatId(chatId: number): Promise<ChatEntity> {
     return this.repository.findOneBy({ chatId });
+  }
+
+  getByUser(userId: number, take: number, page: number): Promise<ChatEntity[]> {
+    return this.repository.find({
+      where: { user: { id: userId } },
+      take,
+      skip: take * page,
+      select: ['chatId', 'first_name', 'id', 'last_name', 'photo', 'username'],
+    });
+  }
+
+  remove(id: number): Promise<DeleteResult> {
+    return this.repository.delete(id);
   }
 }
