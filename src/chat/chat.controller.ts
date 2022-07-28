@@ -20,12 +20,11 @@ export class ChatController {
 
   @Get()
   getChats(
-    @Req() req: Request,
     @Query('take') take: string,
     @Query('page') page: string,
+    @Query('botId') botId: string,
   ): Promise<ChatEntity[]> {
-    const user = req.user as IUserData;
-    return this.chatRepository.getByUser(user.id, +take, +page);
+    return this.chatRepository.getByBot(+botId, +take, +page);
   }
 
   @Delete()

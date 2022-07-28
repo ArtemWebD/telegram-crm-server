@@ -19,14 +19,14 @@ export class ChatRepository {
   }
 
   async save(
-    user: UserEntity,
+    botId: number,
     chatId: number,
     image?: FileDto,
   ): Promise<ChatEntity> {
     const photo = image ? await this.fileRepository.save(image) : null;
     return this.repository.save({
       chatId,
-      user,
+      bot: { id: botId },
       ...(photo && { photo }),
     });
   }
@@ -35,7 +35,7 @@ export class ChatRepository {
     return this.repository.findOneBy({ chatId });
   }
 
-  getByUser(botId: number, take: number, page: number): Promise<ChatEntity[]> {
+  getByBot(botId: number, take: number, page: number): Promise<ChatEntity[]> {
     return this.repository.find({
       where: { bot: { id: botId } },
       take,
