@@ -23,7 +23,7 @@ export class TokenRepository {
     }
     return this.repository.save({
       refreshToken,
-      user,
+      user: { id: user.id },
     });
   }
 
