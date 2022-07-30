@@ -23,7 +23,7 @@ export class BotService {
         TELEGRAM_URL +
           `/bot${token}/setWebhook?url=${this.configService.get(
             'URL',
-          )}/bot/${token}`,
+          )}/message/${token}`,
       );
       const bot = await this.botRepository.save(
         token,
