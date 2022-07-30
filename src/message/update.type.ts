@@ -10,6 +10,7 @@ interface ITelegramMessage {
   date: number;
   text?: string;
   caption?: string;
+  photo?: IPhoto[];
 }
 
 interface IFrom {
@@ -27,4 +28,8 @@ interface IChat {
   last_name?: string;
   username?: string;
   type: string;
+}
+
+export interface IPhoto {
+  file_id: number;
 }
