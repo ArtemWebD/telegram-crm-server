@@ -21,11 +21,17 @@ export class ChatRepository {
   async save(
     botId: number,
     chatId: number,
+    first_name: string,
+    last_name: string | undefined,
+    username: string | undefined,
     image?: FileDto,
   ): Promise<ChatEntity> {
     const photo = image ? await this.fileRepository.save(image) : null;
     return this.repository.save({
       chatId,
+      first_name,
+      last_name,
+      username,
       bot: { id: botId },
       ...(photo && { photo }),
     });
