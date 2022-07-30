@@ -60,9 +60,4 @@ export class BotController {
   async remove(@Param('id') id: string): Promise<void> {
     await this.botService.remove(+id);
   }
-
-  @Post('/:token')
-  botHandler(@Body() body) {
-    console.log(body);
-  }
 }
