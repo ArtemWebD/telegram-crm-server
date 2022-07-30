@@ -51,4 +51,8 @@ export class BotRepository {
   getById(id: number): Promise<BotEntity> {
     return this.repository.findOneBy({ id });
   }
+
+  getByToken(token: string): Promise<BotEntity> {
+    return this.repository.findOneBy({ token });
+  }
 }
