@@ -34,6 +34,7 @@ export class BotService {
       delete bot.user;
       return bot;
     } catch (error) {
+      console.log(error);
       throw new HttpException(
         'Не удалось соединиться с ботом, удалите все подключенные вебхуки',
         HttpStatus.BAD_REQUEST,
