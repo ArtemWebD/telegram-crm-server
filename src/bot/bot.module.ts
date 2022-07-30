@@ -11,5 +11,6 @@ import { BotEntity } from './entities/bot.entity';
   imports: [TypeOrmModule.forFeature([BotEntity]), ConfigModule, TokenModule],
   controllers: [BotController],
   providers: [BotService, BotRepository],
+  exports: [BotRepository],
 })
 export class BotModule {}
