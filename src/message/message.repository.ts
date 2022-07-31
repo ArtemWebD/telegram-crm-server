@@ -12,12 +12,36 @@ export class MessageRepository {
   ) {}
 
   save(createMessageDto: CreateMessageDto): Promise<MessageEntity> {
-    const { text, chatId, from, files } = createMessageDto;
+    const { text, chatId, from, file } = createMessageDto;
+    console.log(file);
     return this.repository.save({
       text,
       from,
       chat: { id: chatId },
-      files: files.map((id) => ({ id })),
+      file: file ? { id: file } : undefined,
+    });
+  }
+
+  getByChatId(
+    chatId: number,
+    take: number,
+    page: number,
+  ): Promise<MessageEntity[]> {
+    return this.repository.find({
+      where: {
+        chat: { id: chatId },
+      },
+      take,
+      skip: take * page,
+      relations: {
+        file: true,
+      },
+      select: {
+        file: {
+          id: true,
+          name: true,
+        },
+      },
     });
   }
 }
