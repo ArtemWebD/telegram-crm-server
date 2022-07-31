@@ -30,6 +30,7 @@ export class FileEntity {
 
   @OneToOne(() => MessageEntity, (message) => message.file, {
     nullable: true,
+    onDelete: 'CASCADE',
   })
   @JoinColumn()
   message?: MessageEntity;

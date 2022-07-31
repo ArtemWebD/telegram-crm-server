@@ -34,7 +34,6 @@ export class MessageEntity {
 
   @OneToOne(() => FileEntity, (file) => file.message, {
     cascade: true,
-    onDelete: 'CASCADE',
     nullable: true,
   })
   file?: FileEntity;
