@@ -21,12 +21,13 @@ export class AppGateway implements OnGatewayInit {
     this.logger.log('Socket was inited');
   }
 
-  @SubscribeMessage('connect')
+  @SubscribeMessage('messageConnect')
   connectionHandler(client: Socket, token: string) {
     client.join(token);
+    this.server.to(token).emit('messageConnect', true);
   }
 
-  @SubscribeMessage('disconnect')
+  @SubscribeMessage('messageDisconnect')
   disconnectionHandler(client: Socket, token: string) {
     client.leave(token);
   }
