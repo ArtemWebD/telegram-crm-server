@@ -12,7 +12,9 @@ export class TokenRepository {
   ) {}
 
   async save(user: UserEntity, refreshToken: string): Promise<TokenEntity> {
-    const tokenData = await this.repository.findOneBy({ user });
+    const tokenData = await this.repository.findOneBy({
+      user: { id: user.id },
+    });
     if (tokenData) {
       tokenData.refreshToken = refreshToken;
       await this.repository.update(tokenData.id, { refreshToken });
