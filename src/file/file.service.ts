@@ -1,4 +1,4 @@
-import https from 'https';
+import * as https from 'https';
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { TELEGRAM_URL } from 'src/common/constants';
