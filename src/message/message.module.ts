@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { BotModule } from 'src/bot/bot.module';
 import { ChatModule } from 'src/chat/chat.module';
 import { FileModule } from 'src/file/file.module';
+import { SocketModule } from 'src/socket/socket.module';
 import { TokenModule } from 'src/token/token.module';
 import { MessageEntity } from './entities/message.entity';
 import { MessageController } from './message.controller';
@@ -16,6 +17,7 @@ import { MessageService } from './message.service';
     TokenModule,
     BotModule,
     ChatModule,
+    SocketModule,
   ],
   controllers: [MessageController],
   providers: [MessageService, MessageRepository],
