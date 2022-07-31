@@ -28,7 +28,7 @@ export class FileEntity {
   })
   chat: ChatEntity;
 
-  @ManyToOne(() => MessageEntity, (message) => message.files, {
+  @OneToOne(() => MessageEntity, (message) => message.file, {
     nullable: true,
   })
   @JoinColumn()

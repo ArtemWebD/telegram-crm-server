@@ -6,6 +6,7 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -25,13 +26,16 @@ export class MessageEntity {
   @Column()
   from: MessageFrom;
 
-  @ManyToOne(() => ChatEntity, (chat) => chat.messages)
+  @ManyToOne(() => ChatEntity, (chat) => chat.messages, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn()
   chat: ChatEntity;
 
-  @OneToMany(() => FileEntity, (file) => file.message, {
+  @OneToOne(() => FileEntity, (file) => file.message, {
     cascade: true,
+    onDelete: 'CASCADE',
     nullable: true,
   })
-  files: FileEntity[];
+  file?: FileEntity;
 }

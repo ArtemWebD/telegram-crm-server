@@ -28,17 +28,22 @@ export class ChatEntity {
   @Column({ nullable: true })
   username?: string;
 
-  @ManyToOne(() => BotEntity, (bot) => bot.chats)
+  @ManyToOne(() => BotEntity, (bot) => bot.chats, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn()
   bot: BotEntity;
 
   @OneToOne(() => FileEntity, (file) => file.chat, {
     cascade: true,
+    onDelete: 'CASCADE',
     nullable: true,
   })
   @JoinColumn()
   photo?: FileEntity;
 
-  @OneToMany(() => MessageEntity, (message) => message.chat)
+  @OneToMany(() => MessageEntity, (message) => message.chat, {
+    cascade: true,
+  })
   messages: MessageEntity[];
 }
