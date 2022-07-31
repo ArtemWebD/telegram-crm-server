@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { AuthorizationGuard } from 'src/auth/auth.guard';
 import { ChatInterceptor } from 'src/chat/chat.interceptor';
+import { SocketService } from 'src/socket/socket.service';
 import { SendMessageDto } from './dto/send-message.dto';
 import { MessageEntity } from './entities/message.entity';
 import { MessageRepository } from './message.repository';
@@ -21,13 +22,17 @@ export class MessageController {
   constructor(
     private readonly messageService: MessageService,
     private readonly messageRepository: MessageRepository,
+    private readonly socketService: SocketService,
   ) {}
 
   @UseInterceptors(ChatInterceptor)
   @Post('/:token')
-  botHandler(@Body() update: IUpdate, @Param('token') token: string) {
-    console.log(update);
-    return this.messageService.create(update, token);
+  async botHandler(
+    @Body() update: IUpdate,
+    @Param('token') token: string,
+  ): Promise<boolean> {
+    const message = await this.messageService.create(update, token);
+    return this.socketService.socket.to(token).emit('telegramMessage', message);
   }
 
   @UseGuards(AuthorizationGuard)
