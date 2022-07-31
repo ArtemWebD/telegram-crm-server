@@ -5,6 +5,6 @@ export class CreateMessageDto {
     public text: string | undefined,
     public from: MessageFrom,
     public chatId: number,
-    public files?: number[],
+    public file?: number,
   ) {}
 }
