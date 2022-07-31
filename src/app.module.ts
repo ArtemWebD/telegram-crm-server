@@ -10,6 +10,7 @@ import { MessageModule } from './message/message.module';
 import { AppGateway } from './app.gateway';
 import { BotModule } from './bot/bot.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { SocketModule } from './socket/socket.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     FileModule,
     MessageModule,
     BotModule,
+    SocketModule,
   ],
   controllers: [],
   providers: [AppGateway],
