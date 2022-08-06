@@ -13,7 +13,7 @@ import { ChatInterceptor } from 'src/chat/chat.interceptor';
 import { SocketService } from 'src/socket/socket.service';
 import { SendMessageDto } from './dto/send-message.dto';
 import { MessageEntity } from './entities/message.entity';
-import { MessageRepository } from './message.repository';
+import { IMessages, MessageRepository } from './message.repository';
 import { MessageService } from './message.service';
 import { IUpdate } from './update.type';
 
@@ -47,7 +47,7 @@ export class MessageController {
     @Query('chatId') chatId: string,
     @Query('take') take: string,
     @Query('page') page: string,
-  ): Promise<MessageEntity[]> {
+  ): Promise<IMessages> {
     return this.messageRepository.getByChatId(+chatId, +take, +page);
   }
 }

@@ -4,6 +4,11 @@ import { Repository } from 'typeorm';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { MessageEntity } from './entities/message.entity';
 
+export interface IMessages {
+  messages: MessageEntity[];
+  count: number;
+}
+
 @Injectable()
 export class MessageRepository {
   constructor(
@@ -13,7 +18,6 @@ export class MessageRepository {
 
   save(createMessageDto: CreateMessageDto): Promise<MessageEntity> {
     const { text, chatId, from, file } = createMessageDto;
-    console.log(file);
     return this.repository.save({
       text,
       from,
@@ -22,12 +26,12 @@ export class MessageRepository {
     });
   }
 
-  getByChatId(
+  async getByChatId(
     chatId: number,
     take: number,
     page: number,
-  ): Promise<MessageEntity[]> {
-    return this.repository.find({
+  ): Promise<IMessages> {
+    const messages = await this.repository.find({
       where: {
         chat: { id: chatId },
       },
@@ -35,11 +39,46 @@ export class MessageRepository {
       skip: take * page,
       relations: {
         file: true,
+        chat: true,
+      },
+      order: {
+        createdAt: 'DESC',
       },
       select: {
         file: {
+          data: true,
+          mimetype: true,
           id: true,
-          name: true,
+        },
+        chat: {
+          id: true,
+        },
+      },
+    });
+    const count = await this.repository.countBy({ chat: { id: chatId } });
+    return {
+      messages,
+      count,
+    };
+  }
+
+  getById(id: number): Promise<MessageEntity> {
+    return this.repository.findOne({
+      where: {
+        id,
+      },
+      relations: {
+        file: true,
+        chat: true,
+      },
+      select: {
+        file: {
+          data: true,
+          mimetype: true,
+          id: true,
+        },
+        chat: {
+          id: true,
         },
       },
     });

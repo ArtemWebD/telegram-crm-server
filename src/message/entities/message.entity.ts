@@ -5,9 +5,9 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
+  CreateDateColumn,
 } from 'typeorm';
 
 export enum MessageFrom {
@@ -19,6 +19,9 @@ export enum MessageFrom {
 export class MessageEntity {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @CreateDateColumn()
+  createdAt: Date;
 
   @Column({ nullable: true })
   text?: string;

@@ -11,6 +11,7 @@ import { AppGateway } from './app.gateway';
 import { BotModule } from './bot/bot.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { SocketModule } from './socket/socket.module';
+import { OptimizerModule } from './optimizer/optimizer.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { SocketModule } from './socket/socket.module';
     MessageModule,
     BotModule,
     SocketModule,
+    OptimizerModule,
   ],
   controllers: [],
   providers: [AppGateway],

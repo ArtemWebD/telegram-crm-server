@@ -46,7 +46,18 @@ export class ChatRepository {
       where: { bot: { id: botId } },
       take,
       skip: take * page,
+      relations: ['photo'],
+      select: {
+        photo: {
+          data: true,
+          mimetype: true,
+        },
+      },
     });
+  }
+
+  getById(id: number): Promise<ChatEntity> {
+    return this.repository.findOneBy({ id });
   }
 
   remove(id: number): Promise<DeleteResult> {

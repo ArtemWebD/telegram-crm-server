@@ -1,3 +1,4 @@
+import * as uuid from 'uuid';
 import {
   CallHandler,
   ExecutionContext,
@@ -8,7 +9,6 @@ import { Request } from 'express';
 import { Observable } from 'rxjs';
 import { BotRepository } from 'src/bot/bot.repository';
 import { FileDto } from 'src/file/dto/file.dto';
-import { FileRepository } from 'src/file/file.repository';
 import { FileService } from 'src/file/file.service';
 import { IUpdate } from 'src/message/update.type';
 import { ChatRepository } from './chat.repository';
@@ -23,7 +23,6 @@ export class ChatInterceptor implements NestInterceptor {
     private readonly chatRepository: ChatRepository,
     private readonly botRepository: BotRepository,
     private readonly fileService: FileService,
-    private readonly fileRepository: FileRepository,
   ) {}
 
   async intercept(
@@ -46,8 +45,9 @@ export class ChatInterceptor implements NestInterceptor {
       req.params.token,
     );
     const photo = image
-      ? await this.fileRepository.save(
-          new FileDto('user_photo.jpg', 'image/jpg', [...image]),
+      ? await this.fileService.saveUserPhoto(
+          new FileDto(`${uuid.v4()}.jpg`, 'image/jpg', ''),
+          image,
         )
       : undefined;
     return this.chatRepository.save(

@@ -4,7 +4,6 @@ import {
   Column,
   Entity,
   JoinColumn,
-  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -20,8 +19,8 @@ export class FileEntity {
   @Column()
   mimetype: string;
 
-  @Column({ array: true, type: 'int' })
-  data: number[];
+  @Column({ nullable: true })
+  data: string;
 
   @OneToOne(() => ChatEntity, (chat) => chat.photo, {
     nullable: true,
