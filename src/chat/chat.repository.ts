@@ -2,9 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FileDto } from 'src/file/dto/file.dto';
 import { FileRepository } from 'src/file/file.repository';
-import { UserEntity } from 'src/user/entities/user.entity';
 import { DeleteResult, Repository } from 'typeorm';
 import { ChatEntity } from './entities/chat.entity';
+
+export interface IChats {
+  chats: ChatEntity[];
+  count: number;
+}
 
 @Injectable()
 export class ChatRepository {
@@ -41,8 +45,8 @@ export class ChatRepository {
     return this.repository.findOneBy({ chatId });
   }
 
-  getByBot(botId: number, take: number, page: number): Promise<ChatEntity[]> {
-    return this.repository.find({
+  async getByBot(botId: number, take: number, page: number): Promise<IChats> {
+    const chats = await this.repository.find({
       where: { bot: { id: botId } },
       take,
       skip: take * page,
@@ -54,6 +58,11 @@ export class ChatRepository {
         },
       },
     });
+    const count = await this.repository.countBy({ bot: { id: botId } });
+    return {
+      chats,
+      count,
+    };
   }
 
   getById(id: number): Promise<ChatEntity> {
