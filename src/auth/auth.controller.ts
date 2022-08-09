@@ -26,14 +26,12 @@ export class AuthController {
     res.cookie('refreshToken', tokens.refreshToken, {
       maxAge: 30 * 24 * 60 * 60 * 1000,
       httpOnly: true,
-      domain: this.configService.get<string>('CLIENT_DOMAIN'),
       sameSite: 'none',
       secure: true,
     });
     res.cookie('accessToken', tokens.accessToken, {
       maxAge: 30 * 60 * 1000,
       httpOnly: true,
-      domain: this.configService.get<string>('CLIENT_DOMAIN'),
       sameSite: 'none',
       secure: true,
     });
@@ -48,14 +46,12 @@ export class AuthController {
     res.cookie('refreshToken', tokens.refreshToken, {
       maxAge: 30 * 24 * 60 * 60 * 1000,
       httpOnly: true,
-      domain: this.configService.get<string>('CLIENT_DOMAIN'),
       sameSite: 'none',
       secure: true,
     });
     res.cookie('accessToken', tokens.accessToken, {
       maxAge: 30 * 60 * 1000,
       httpOnly: true,
-      domain: this.configService.get<string>('CLIENT_DOMAIN'),
       sameSite: 'none',
       secure: true,
     });
@@ -78,14 +74,12 @@ export class AuthController {
     res.cookie('accessToken', tokens.accessToken, {
       maxAge: 30 * 60 * 1000,
       httpOnly: true,
-      domain: this.configService.get<string>('CLIENT_DOMAIN'),
       sameSite: 'none',
       secure: true,
     });
     res.cookie('refreshToken', tokens.refreshToken, {
       maxAge: 30 * 24 * 60 * 60 * 1000,
       httpOnly: true,
-      domain: this.configService.get<string>('CLIENT_DOMAIN'),
       sameSite: 'none',
       secure: true,
     });
