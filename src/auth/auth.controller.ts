@@ -1,4 +1,5 @@
 import { Controller, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
 import { UserEntity } from 'src/user/entities/user.entity';
@@ -12,7 +13,10 @@ export interface IAccessToken {
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly configService: ConfigService,
+  ) {}
 
   @UseGuards(AuthGuard('register'))
   @Post('register')
@@ -22,10 +26,12 @@ export class AuthController {
     res.cookie('refreshToken', tokens.refreshToken, {
       maxAge: 30 * 24 * 60 * 60 * 1000,
       httpOnly: true,
+      domain: this.configService.get<string>('CLIENT_DOMAIN'),
     });
     res.cookie('accessToken', tokens.accessToken, {
       maxAge: 30 * 60 * 1000,
       httpOnly: true,
+      domain: this.configService.get<string>('CLIENT_DOMAIN'),
     });
     res.status(200).send();
   }
@@ -38,10 +44,12 @@ export class AuthController {
     res.cookie('refreshToken', tokens.refreshToken, {
       maxAge: 30 * 24 * 60 * 60 * 1000,
       httpOnly: true,
+      domain: this.configService.get<string>('CLIENT_DOMAIN'),
     });
     res.cookie('accessToken', tokens.accessToken, {
       maxAge: 30 * 60 * 1000,
       httpOnly: true,
+      domain: this.configService.get<string>('CLIENT_DOMAIN'),
     });
     res.status(200).send();
   }
@@ -62,10 +70,12 @@ export class AuthController {
     res.cookie('accessToken', tokens.accessToken, {
       maxAge: 30 * 60 * 1000,
       httpOnly: true,
+      domain: this.configService.get<string>('CLIENT_DOMAIN'),
     });
     res.cookie('refreshToken', tokens.refreshToken, {
       maxAge: 30 * 24 * 60 * 60 * 1000,
       httpOnly: true,
+      domain: this.configService.get<string>('CLIENT_DOMAIN'),
     });
     res.status(200).send();
   }
