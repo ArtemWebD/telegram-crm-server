@@ -19,6 +19,7 @@ export class BotService {
       const { token } = createBotDto;
       const botInfo = await axios.get(TELEGRAM_URL + `/bot${token}/getMe`);
       const { first_name, username } = botInfo.data.result;
+      await axios.get(TELEGRAM_URL + `/bot${token}/deleteWebhook`);
       await axios.get(
         TELEGRAM_URL +
           `/bot${token}/setWebhook?url=${this.configService.get(
