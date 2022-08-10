@@ -1,9 +1,10 @@
 export interface IUpdate {
   update_id: number;
-  message: ITelegramMessage;
+  message?: ITelegramMessage;
+  chat_join_request?: IChatJoinRequest;
 }
 
-interface ITelegramMessage {
+export interface ITelegramMessage {
   message_id: number;
   from: IFrom;
   chat: IChat;
@@ -13,7 +14,13 @@ interface ITelegramMessage {
   photo?: IPhoto[];
 }
 
-interface IFrom {
+interface IChatJoinRequest {
+  chat: IChannel;
+  from: IFrom;
+  date: number;
+}
+
+export interface IFrom {
   id: number;
   is_bot: boolean;
   first_name: string;
@@ -27,6 +34,12 @@ interface IChat {
   first_name: string;
   last_name?: string;
   username?: string;
+  type: string;
+}
+
+interface IChannel {
+  id: number;
+  title: string;
   type: string;
 }
 

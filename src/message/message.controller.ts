@@ -30,7 +30,10 @@ export class MessageController {
   async botHandler(
     @Body() update: IUpdate,
     @Param('token') token: string,
-  ): Promise<boolean> {
+  ): Promise<boolean | void> {
+    if (!update.message) {
+      return;
+    }
     const message = await this.messageService.create(update, token);
     return this.socketService.socket.to(token).emit('telegramMessage', message);
   }
