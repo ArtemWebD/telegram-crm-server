@@ -1,3 +1,4 @@
+import { BotEntity } from 'src/bot/entities/bot.entity';
 import { ChatEntity } from 'src/chat/entities/chat.entity';
 import { MessageEntity } from 'src/message/entities/message.entity';
 import {
@@ -33,4 +34,11 @@ export class FileEntity {
   })
   @JoinColumn()
   message?: MessageEntity;
+
+  @OneToOne(() => BotEntity, (bot) => bot.chatJoinRequestImage, {
+    onDelete: 'CASCADE',
+    nullable: true,
+  })
+  @JoinColumn()
+  bot?: BotEntity;
 }
