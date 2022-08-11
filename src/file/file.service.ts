@@ -45,6 +45,16 @@ export class FileService {
     return this.fileRepository.save(file);
   }
 
+  async saveBotPhoto(file: FileDto, binary: Buffer): Promise<FileEntity> {
+    const dirPath = path.resolve(
+      __dirname,
+      `../static/bots/${file.name.slice(0, 2)}`,
+    );
+    await this.savePhoto(dirPath, file, binary);
+    file.data = `static/bots/${file.name.slice(0, 2)}/${file.name}`;
+    return this.fileRepository.save(file);
+  }
+
   async getUserPhoto(
     chatId: number,
     token: string,
