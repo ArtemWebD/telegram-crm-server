@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BotModule } from 'src/bot/bot.module';
 import { ChatModule } from 'src/chat/chat.module';
@@ -18,6 +19,7 @@ import { MessageService } from './message.service';
     BotModule,
     ChatModule,
     SocketModule,
+    ConfigModule,
   ],
   controllers: [MessageController],
   providers: [MessageService, MessageRepository],
