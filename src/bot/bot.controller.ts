@@ -8,8 +8,11 @@ import {
   Put,
   Query,
   Req,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { Request } from 'express';
 import { AuthorizationGuard, IUserData } from 'src/auth/auth.guard';
 import { BotRepository } from './bot.repository';
@@ -26,13 +29,21 @@ export class BotController {
   ) {}
 
   @UseGuards(AuthorizationGuard)
+  @UseInterceptors(
+    FileInterceptor('photo', {
+      limits: {
+        fileSize: 10485760,
+      },
+    }),
+  )
   @Post()
   create(
     @Req() req: Request,
     @Body() createBotDto: CreateBotDto,
+    @UploadedFile() photo?: Express.Multer.File,
   ): Promise<BotEntity> {
     const user = req.user as IUserData;
-    return this.botService.create(createBotDto, user.id);
+    return this.botService.create(createBotDto, user.id, photo?.buffer);
   }
 
   @UseGuards(AuthorizationGuard)
