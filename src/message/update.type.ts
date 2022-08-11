@@ -14,7 +14,7 @@ export interface ITelegramMessage {
   photo?: IPhoto[];
 }
 
-interface IChatJoinRequest {
+export interface IChatJoinRequest {
   chat: IChannel;
   from: IFrom;
   date: number;
