@@ -13,6 +13,7 @@ import { ChatInterceptor } from 'src/chat/chat.interceptor';
 import { SocketService } from 'src/socket/socket.service';
 import { SendMessageDto } from './dto/send-message.dto';
 import { MessageEntity } from './entities/message.entity';
+import { MessageInterceptor } from './message.interceptor';
 import { IMessages, MessageRepository } from './message.repository';
 import { MessageService } from './message.service';
 import { IUpdate } from './update.type';
@@ -25,7 +26,7 @@ export class MessageController {
     private readonly socketService: SocketService,
   ) {}
 
-  @UseInterceptors(ChatInterceptor)
+  @UseInterceptors(ChatInterceptor, MessageInterceptor)
   @Post('/:token')
   async botHandler(
     @Body() update: IUpdate,
