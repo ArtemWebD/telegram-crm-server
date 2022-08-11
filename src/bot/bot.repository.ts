@@ -4,6 +4,16 @@ import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { BotEntity } from './entities/bot.entity';
 
+interface ISaveBot {
+  token: string;
+  first_name: string;
+  username: string;
+  userId: number;
+  fileId?: number;
+  approveRequests?: boolean;
+  chatJoinRequestText?: string;
+}
+
 @Injectable()
 export class BotRepository {
   constructor(
@@ -11,16 +21,23 @@ export class BotRepository {
     private readonly repository: Repository<BotEntity>,
   ) {}
 
-  save(
-    token: string,
-    first_name: string,
-    username: string,
-    userId: number,
-  ): Promise<BotEntity> {
+  save(data: ISaveBot): Promise<BotEntity> {
+    const {
+      token,
+      first_name,
+      username,
+      userId,
+      approveRequests,
+      chatJoinRequestText,
+      fileId,
+    } = data;
     return this.repository.save({
       token,
       first_name,
       username,
+      approveRequests,
+      chatJoinRequestText,
+      chatJoinRequestImage: fileId ? { id: fileId } : undefined,
       user: { id: userId },
     });
   }
@@ -53,6 +70,18 @@ export class BotRepository {
   }
 
   getByToken(token: string): Promise<BotEntity> {
-    return this.repository.findOneBy({ token });
+    return this.repository.findOne({
+      where: { token },
+      relations: {
+        chatJoinRequestImage: true,
+      },
+      select: {
+        chatJoinRequestImage: {
+          id: true,
+          mimetype: true,
+          data: true,
+        },
+      },
+    });
   }
 }
