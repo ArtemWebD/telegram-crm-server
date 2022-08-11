@@ -1,4 +1,5 @@
 import * as uuid from 'uuid';
+import * as path from 'path';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ChatRepository } from 'src/chat/chat.repository';
 import { FileDto } from 'src/file/dto/file.dto';
@@ -8,9 +9,11 @@ import { CreateMessageDto } from './dto/create-message.dto';
 import { SendMessageDto } from './dto/send-message.dto';
 import { MessageEntity, MessageFrom } from './entities/message.entity';
 import { MessageRepository } from './message.repository';
-import { IPhoto, IUpdate } from './update.type';
-import axios from 'axios';
+import { IChatJoinRequest, IPhoto, IUpdate } from './update.type';
+import axios, { AxiosResponse } from 'axios';
 import { TELEGRAM_URL } from 'src/common/constants';
+import { BotRepository } from 'src/bot/bot.repository';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class MessageService {
@@ -18,6 +21,8 @@ export class MessageService {
     private readonly messageRepository: MessageRepository,
     private readonly fileService: FileService,
     private readonly chatRepository: ChatRepository,
+    private readonly botRepository: BotRepository,
+    private readonly configService: ConfigService,
   ) {}
 
   async create(update: IUpdate, token: string): Promise<MessageEntity> {
@@ -52,11 +57,10 @@ export class MessageService {
         MessageFrom.bot,
         sendMessageDto.chatId,
       );
-      await axios.get(
-        TELEGRAM_URL +
-          `/bot${sendMessageDto.token}/sendMessage?chat_id=${
-            chat.chatId
-          }&text=${encodeURIComponent(sendMessageDto.text)}`,
+      await this.sendBotMessage(
+        sendMessageDto.token,
+        chat.chatId,
+        sendMessageDto.text,
       );
       return this.messageRepository.save(createMessageDto);
     } catch (error) {
@@ -66,6 +70,74 @@ export class MessageService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+  }
+
+  async chatJoinRequestHandler(
+    token: string,
+    chatJoinRequest: IChatJoinRequest,
+  ): Promise<void> {
+    const bot = await this.botRepository.getByToken(token);
+    if (!bot.approveRequests) {
+      return;
+    }
+    await this.approveChatJoinRequest(
+      token,
+      chatJoinRequest.chat.id,
+      chatJoinRequest.from.id,
+    );
+    if (bot.chatJoinRequestText) {
+      bot.chatJoinRequestImage
+        ? await this.sendBotPhoto(
+            token,
+            bot.chatJoinRequestImage,
+            chatJoinRequest.from.id,
+            bot.chatJoinRequestText,
+          )
+        : await this.sendBotMessage(
+            token,
+            chatJoinRequest.from.id,
+            bot.chatJoinRequestText,
+          );
+    }
+  }
+
+  private approveChatJoinRequest(
+    token: string,
+    chatId: number,
+    userId: number,
+  ): Promise<AxiosResponse> {
+    return axios.get(
+      TELEGRAM_URL +
+        `/bot${token}/approveChatJoinRequest?chat_id=${chatId}&user_id=${userId}`,
+    );
+  }
+
+  private sendBotMessage(
+    token: string,
+    userId: number,
+    text: string,
+  ): Promise<AxiosResponse> {
+    return axios.get(
+      TELEGRAM_URL +
+        `/bot${token}/sendMessage?chat_id=${userId}&text=${encodeURIComponent(
+          text,
+        )}`,
+    );
+  }
+
+  private async sendBotPhoto(
+    token: string,
+    file: FileEntity,
+    userId: number,
+    caption?: string,
+  ): Promise<AxiosResponse> {
+    const photoPath = this.configService.get('URL') + `/${file.data}`;
+    return axios.get(
+      TELEGRAM_URL +
+        `/bot${token}/sendPhoto?chat_id=${userId}&photo=${photoPath}&caption=${
+          encodeURIComponent(caption) || ''
+        }`,
+    );
   }
 
   private async getFile(
