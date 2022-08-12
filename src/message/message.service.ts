@@ -115,8 +115,9 @@ export class MessageService {
       TELEGRAM_URL +
         `/bot${token}/getChatMember?chat_id=${chatId}&user_id=${userId}`,
     );
+    console.log(res.data.result);
     return (
-      res.data.result.status !== 'left' || res.data.result.status !== 'kicked'
+      res.data.result.status !== 'left' && res.data.result.status !== 'kicked'
     );
   }
 
