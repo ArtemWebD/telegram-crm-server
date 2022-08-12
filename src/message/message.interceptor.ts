@@ -17,15 +17,19 @@ export class MessageInterceptor implements NestInterceptor {
     context: ExecutionContext,
     next: CallHandler<any>,
   ): Promise<Observable<any>> {
-    const req = context.switchToHttp().getRequest() as Request;
-    const update = req.body as IUpdate;
-    const token = req.params.token;
-    if (update.chat_join_request) {
-      await this.messageService.chatJoinRequestHandler(
-        token,
-        update.chat_join_request,
-      );
+    try {
+      const req = context.switchToHttp().getRequest() as Request;
+      const update = req.body as IUpdate;
+      const token = req.params.token;
+      if (update.chat_join_request) {
+        await this.messageService.chatJoinRequestHandler(
+          token,
+          update.chat_join_request,
+        );
+      }
+      return next.handle();
+    } catch (error) {
+      console.log(error);
     }
-    return next.handle();
   }
 }
