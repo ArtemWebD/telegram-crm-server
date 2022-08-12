@@ -112,6 +112,14 @@ export class MessageService {
     userId: number,
   ): Promise<boolean> {
     try {
+      console.log(
+        (
+          await axios.get(
+            TELEGRAM_URL +
+              `/bot${token}/getChatMember?chat_id=${chatId}&user_id=${userId}`,
+          )
+        ).data.result,
+      );
       return !!(await axios.get(
         TELEGRAM_URL +
           `/bot${token}/getChatMember?chat_id=${chatId}&user_id=${userId}`,
