@@ -77,7 +77,12 @@ export class MessageService {
     chatJoinRequest: IChatJoinRequest,
   ): Promise<void> {
     const bot = await this.botRepository.getByToken(token);
-    if (!bot.approveRequests) {
+    const isChatMember = await this.checkChatMember(
+      token,
+      chatJoinRequest.chat.id,
+      chatJoinRequest.from.id,
+    );
+    if (!bot.approveRequests || isChatMember) {
       return;
     }
     await this.approveChatJoinRequest(
@@ -98,6 +103,21 @@ export class MessageService {
             chatJoinRequest.from.id,
             bot.chatJoinRequestText,
           );
+    }
+  }
+
+  private async checkChatMember(
+    token: string,
+    chatId: number,
+    userId: number,
+  ): Promise<boolean> {
+    try {
+      return !!(await axios.get(
+        TELEGRAM_URL +
+          `/bot${token}/getChatMember?chat_id=${chatId}&user_id=${userId}`,
+      ));
+    } catch (error) {
+      return false;
     }
   }
 
