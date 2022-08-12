@@ -111,22 +111,13 @@ export class MessageService {
     chatId: number,
     userId: number,
   ): Promise<boolean> {
-    try {
-      console.log(
-        (
-          await axios.get(
-            TELEGRAM_URL +
-              `/bot${token}/getChatMember?chat_id=${chatId}&user_id=${userId}`,
-          )
-        ).data.result,
-      );
-      return !!(await axios.get(
-        TELEGRAM_URL +
-          `/bot${token}/getChatMember?chat_id=${chatId}&user_id=${userId}`,
-      ));
-    } catch (error) {
-      return false;
-    }
+    const res = await axios.get(
+      TELEGRAM_URL +
+        `/bot${token}/getChatMember?chat_id=${chatId}&user_id=${userId}`,
+    );
+    return (
+      res.data.result.status !== 'left' || res.data.result.status !== 'kicked'
+    );
   }
 
   private approveChatJoinRequest(
