@@ -12,7 +12,6 @@ import { AuthorizationGuard } from 'src/auth/auth.guard';
 import { ChatInterceptor } from 'src/chat/chat.interceptor';
 import { SocketService } from 'src/socket/socket.service';
 import { SendMessageDto } from './dto/send-message.dto';
-import { MessageEntity } from './entities/message.entity';
 import { MessageInterceptor } from './message.interceptor';
 import { IMessages, MessageRepository } from './message.repository';
 import { MessageService } from './message.service';
