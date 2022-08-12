@@ -16,7 +16,7 @@ export class ChatEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'bigint' })
+  @Column({ type: 'bigint', nullable: true })
   chatId: number;
 
   @Column()
